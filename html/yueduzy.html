@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小说资源 - 指尖看世界</title>
+    <link rel="shortcut icon" type="image/png" href="../assets/images/favicon.png">  
+    <!-- 新增Bootstrap响应式meta标签 -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 30px auto; /* 修改为自动居中 */
+        }
+        .header-title {
+            color: #2c3e50;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+        .intro-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* 优化表格样式 */
+        .table td, .table th {
+            vertical-align: middle !important; /* 垂直居中 */
+        }
+        .table a {
+            color: #007bff !important;
+            text-decoration: underline;
+        }
+        /* 斑马纹表格 */
+        .table tbody tr:nth-child(even) {
+            background-color: #f8f9fa; /* 浅灰色 */
+        }
+        .table tbody tr:nth-child(odd) {
+            background-color: white; /* 白色 */
+        }
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            .badge {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+            h1.header-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 标题居中 -->
+        <h1 class="header-title">📚 小说资源收集</h1>
+        
+        <!-- 说明框 -->
+        <div class="intro-box">
+            <h5>网站说明</h5>
+            <p class="mb-0">本站专注收录优质小说资源。所有资源经过人工审核，每日自动更新状态检测。</p>
+        </div>
+
+        <!-- 数据信息 -->
+        <div class="alert alert-light text-center">
+            <small>数据更新时间：<span id="updateDate"></span> | 共收录 <span id="siteCount"></span> 个站点</small>
+        </div>
+
+        <!-- 响应式表格 -->
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="text-center">名称</th>
+                        <th class="text-center">访问地址</th>
+                        <th class="text-center">状态</th>
+                    </tr>
+                </thead>
+                <tbody id="linkList">
+
+                </tbody>
+            </table>
+        </div>
+        
+        <footer class="text-center text-secondary py-4">
+            <small>© 2025 指尖看世界 | 数据仅供参考，访问请遵守当地法律</small>
+        </footer>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        // 数据源
+        const resourceList = [
+            { name: "大灰狼书源发布页", url: "https://dashabi.tk/", status: 1 },
+            { name: "晴天书源发布页", url: "http://www.qingtian618.cn/", status: 1 },
+            { name: "书山接口发布页", url: "http://fb.shushan.vip:9999/", status: 1 },
+            { name: "源仓库发布页", url: "https://link3.cc/yckceo", status: 1 },
+			{ name: "Yioe书源合集", url: "https://shuyuan.yiove.com/normal", status: 1 },
+			{ name: "免费小说网站", url: "https://bhapp.top/XS/", status: 1 },
+            // 更多数据...
+        ];
+
+        // 日期格式化
+        function formatDate(date) {
+            const pad = n => n < 10 ? '0' + n : n;
+            return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+        }
+
+        // 渲染表格
+        function renderTable() {
+            const tbody = $('#linkList');
+            let html = '';
+            
+            resourceList.forEach(item => {
+                html += `
+                <tr>
+                    <td>${item.name}</td>
+                    <td class="text-center">
+                        <a href="${item.url}" target="_blank" class="text-truncate d-inline-block" style="max-width: 150px;">
+                            ${item.url.replace(/https?:\/\/(www\.)?/, '')}
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge badge-pill ${item.status ? 'badge-success' : 'badge-danger'}">
+                            ${item.status ? '正常访问' : '暂时失效'}
+                        </span>
+                    </td>
+                </tr>`;
+            });
+            
+            tbody.html(html);
+            $('#siteCount').text(resourceList.length);
+        }
+
+        $(document).ready(function() {
+            $('#updateDate').text(formatDate(new Date()));
+            renderTable();
+            setInterval(() => {
+                $('#updateDate').text(formatDate(new Date()));
+            }, 3600000);
+        });
+    </script>
+</body>
+</html>

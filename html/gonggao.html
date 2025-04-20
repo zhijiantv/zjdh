@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告内容 - 指尖看世界</title>
+	<link rel="shortcut icon" type="image/png" href="../assets/images/favicon.png">    
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            background-color: #f8f9fa;
+        }
+
+        /* 通用边框样式 */
+        .section {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 800px;
+            background: white;
+        }
+
+        /* 顶部图片区块 */
+        .header-image {
+            position: relative;
+            height: 300px;
+            background: url('https://picsum.photos/800/300') center/cover;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-title {
+            color: white;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 文章区块 */
+        .article-header {
+            margin-bottom: 15px;
+        }
+
+        .article-title {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .meta-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #95a5a6;
+        }
+
+        .meta-info i {
+            margin-right: 5px;
+        }
+
+        .article-content {
+            color: #34495e;
+            line-height: 1.8;
+        }
+
+        /* 留言板 */
+        .comment-form {
+            margin-bottom: 20px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .submit-btn {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .comment-list {
+            margin-top: 20px;
+        }
+
+        .comment-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* 底部版权 */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #95a5a6;
+            margin-top: 50px;
+        }
+
+        /* 手机端适配 */
+        @media (max-width: 768px) {
+            .section {
+                margin: 15px;
+                padding: 15px;
+            }
+
+            .header-image {
+                height: 200px;
+            }
+
+            .image-title {
+                font-size: 1.5em;
+            }
+
+            .article-title {
+                font-size: 1.3em;
+            }
+
+            .form-input, .submit-btn {
+                font-size: 14px;
+            }
+        }
+    </style>
+    <!-- Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- 顶部图片区块 -->
+    <div class="section">
+        <div class="header-image">
+            <h1 class="image-title">— —  公告  — —</h1>
+        </div>
+    </div>
+
+    <!-- 文章区块 -->
+    <div class="section">
+        <div class="article-header">
+            <h2 class="article-title">📢指尖_网址导航：公告内容</h2>
+            <div class="meta-info">
+                <span><i class="fas fa-user"></i>横牫</span>
+                <span><i class="fas fa-clock"></i>2025-02-22</span>
+            </div>
+        </div>
+        <p class="article-content">
+<p><strong>常用工具</strong><br>已加入DeepSeek满血版!</p>
+<br>
+<br>
+<p><strong>TVBOX接口</strong><br>新增FuLi资源采集网！<br>并且聚合了接口，请搭配TVBOX低调使用!</p>
+<br>
+<br>
+<p>😘😘😘<br>感谢使用指尖_网址导航！<br>有问题请留言！<br>最新网址：https://zhijiantv.netlify.app/</p>
+           
+        </p>
+    </div>
+
+    <!-- 留言板 -->
+    <div class="section">
+        <div class="comment-list" id="commentList"></div>
+        <form class="comment-form" id="commentForm">
+            <input type="text" class="form-input" placeholder="您的昵称" id="userName" required>
+            <textarea class="form-input" rows="4" placeholder="留言内容" id="userContent" required></textarea>
+            <button type="submit" class="submit-btn">提交留言</button>
+        </form>
+    </div>
+
+    <!-- 底部版权 -->
+    <footer>
+        <p>© 2025 <a href="https://zhijiantv.netlify.app/">指尖看世界</a> 低调使用</p>
+    </footer>
+
+    <script>
+        // 留言功能实现
+        let comments = JSON.parse(localStorage.getItem('comments')) || [];
+
+        document.getElementById('commentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('userName').value.trim();
+            const content = document.getElementById('userContent').value.trim();
+
+            if (name && content) {
+                const newComment = {
+                    id: Date.now(),
+                    name: name,
+                    content: content,
+                    time: new Date().toLocaleString()
+                };
+
+                comments.push(newComment);
+                localStorage.setItem('comments', JSON.stringify(comments));
+                renderComments();
+                this.reset();
+            }
+        });
+
+        function renderComments() {
+            const list = document.getElementById('commentList');
+            list.innerHTML = comments.map(comment => `
+                <div class="comment-item">
+                    <div>
+                        <strong>${sanitize(comment.name)}</strong>
+                        <span style="color: #95a5a6; font-size: 0.9em; margin-left: 10px;">
+                            ${comment.time}
+                        </span>
+                        <p>${sanitize(comment.content)}</p>
+                    </div>
+                    <button class="delete-btn" onclick="deleteComment(${comment.id})">删除</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteComment(id) {
+            if (confirm('确定要删除这条留言吗？')) {
+                comments = comments.filter(c => c.id !== id);
+                localStorage.setItem('comments', JSON.stringify(comments));
+                renderComments();
+            }
+        }
+
+        function sanitize(text) {
+            return text.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        // 初始化渲染
+        renderComments();
+    </script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>影界APP｜指尖看世界</title>
+    <link rel="shortcut icon" href="../assets/images/favicon.png" />  
+    <!-- 引入Bootstrap CSS  -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+	.content-wrapper{
+
+			background-image: url('https://s1.imagehub.cc/images/2025/03/28/686d8a6dbfd7b951a1c5103e67980359.jpg'); /* 背景图URL */
+	}
+
+        /* 自定义样式 */
+        :root {
+            --theme-color: #2196F3;
+        }
+
+        /* 移动端样式 */
+        .mobile-layout {
+            display: block;
+        }
+
+        /* 电脑端样式 */
+        .desktop-layout {
+            display: none;
+        }
+
+        /* 轮播容器  */
+        .screenshot-container {
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+            border-radius: 15px;
+        }
+
+        .screenshot-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .screenshot-item {
+            min-width: 100%;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .screenshot-item img {
+            height: 400px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 版本信息 */
+        .version-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+		
+        /* 底部版权 */
+        footer {
+            text-align: center;
+            padding: 10px;
+            color: #95a5a6;
+            margin-top: 50px;
+        }
+
+        /* 更新日志弹窗  */
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .changelog-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* 响应式调整  */
+        @media (min-width: 992px) {
+            .mobile-layout { display: none; }
+            .desktop-layout { display: block; }
+            
+            .desktop-left {
+                padding-right: 40px;
+            }
+            
+            .desktop-screenshots {
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- 新增内容容器 -->
+<div class="content-wrapper">
+<!-- 移动端布局 -->
+<div class="container mobile-layout py-4">
+    <!-- App基本信息 -->
+    <div class="text-center">
+        <img src="https://s1.imagehub.cc/images/2025/03/27/2b681d674996709e181492fa60651c82.jpg" alt="App图标" class="rounded-circle" width="100">
+        <h1 class="mt-3" style="color: white;">影界</h1>
+        <p  style="color: white;">免费观影TVBox</p>
+    </div>
+
+    <!-- 截图轮播 -->
+    <div class="screenshot-container">
+        <div class="screenshot-wrapper" id="screenshotWrapper">
+            <div class="screenshot-item">
+                <img src="https://s1.imagehub.cc/images/2025/03/28/426624690b48834a5dca9c2ddaa5c9d5.jpg" class="img-fluid" alt="截图1">
+            </div>
+            <div class="screenshot-item">
+                <img src="https://s1.imagehub.cc/images/2025/03/28/63134d185cb0d826ec045720b657873c.jpg" class="img-fluid" alt="截图2">
+            </div>		
+            <div class="screenshot-item">
+                <img src="https://s1.imagehub.cc/images/2025/03/28/426624690b48834a5dca9c2ddaa5c9d5.jpg" class="img-fluid" alt="截图1">
+            </div>
+        </div>
+        <button class="carousel-control-prev" onclick="prevSlide()">‹</button>
+        <button class="carousel-control-next" onclick="nextSlide()">›</button>
+    </div>
+
+            <!-- 版本信息 -->
+            <div class="version-info" style="border: 2px solid #666; max-width: 800px; margin: 20px auto;">
+                <div class="row" style="margin: 0;" data-bs-toggle="modal" data-bs-target="#rowModal">
+                    <div class="col-6" style="padding: 15px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
+                        <h6 style="font-weight: bold;">🔥影界_手机版</h6>
+                        <p>魔改：FM影视</p>
+                    </div>
+                    <div class="col-6" style="padding: 15px; border-bottom: 1px solid #ddd;">
+                        <h6 style="font-weight: bold;">影界_OK手机版</h6>
+                        <p>魔改：OK影视</p>
+                    </div>
+                    <div class="col-6" style="padding: 15px; border-right: 1px solid #ddd;">
+                        <h6 style="font-weight: bold;">🔥影界TV_LP</h6>
+                        <p>魔改：TVBox白盒</p>
+                    </div>
+                    <div class="col-6" style="padding: 15px;">
+                        <h6 style="font-weight: bold;">影界TV_HP</h6>
+                        <p>魔改：TVBox黑盒</p>
+                    </div>
+                </div>
+            </div>
+
+    <!-- 下载按钮 -->
+    <a href="https://www.123865.com/s/pTqA-pzGsA" target="_blank" 
+         class="btn btn-primary w-100 py-3 mb-3 d-inline-block text-decoration-none">
+      <i class="bi bi-download"></i> 立即下载
+    </a>
+
+    <!-- 更新日志按钮 -->
+    <button class="btn btn-outline-secondary w-100" 
+            data-bs-toggle="modal" 
+            data-bs-target="#changelogModal"
+			style="color: white;">
+        查看更新日志
+    </button>
+</div>
+
+<!-- 电脑端布局  -->
+<div class="container desktop-layout py-5">
+    <div class="row">
+        <!-- 左侧内容 -->
+        <div class="col-md-6 desktop-left">
+            <div class="d-flex align-items-center mb-4">
+                <img src="https://s1.imagehub.cc/images/2025/03/27/2b681d674996709e181492fa60651c82.jpg" alt="App图标" width="80" class="rounded-circle">
+                <h1 class="ms-4 mb-0" style="color: white;">影界</h1>
+            </div>
+            
+            <p class="lead" style="color: white;">免费观影TVBox：</p>
+            <ul class="list-unstyled">
+                <li style="color: white;">✓ Android</li>
+                <li style="color: white;">✓ TV电视</li>
+            </ul>
+
+            <!-- 版本信息 -->
+            <div class="version-info" style="border: 2px solid #666; max-width: 800px; margin: 20px auto;">
+                <div class="row" style="margin: 0;" data-bs-toggle="modal" data-bs-target="#rowModal">
+                    <div class="col-6" style="padding: 15px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
+                        <h6 style="font-weight: bold;">🔥影界_手机版</h6>
+                        <p>魔改：FongMi影视</p>
+                    </div>
+                    <div class="col-6" style="padding: 15px; border-bottom: 1px solid #ddd;">
+                        <h6 style="font-weight: bold;">影界_OK手机版</h6>
+                        <p>魔改：OK影视</p>
+                    </div>
+                    <div class="col-6" style="padding: 15px; border-right: 1px solid #ddd;">
+                        <h6 style="font-weight: bold;">🔥影界TV_LP</h6>
+                        <p>魔改：TVBox白盒</p>
+                    </div>
+                    <div class="col-6" style="padding: 15px;">
+                        <h6 style="font-weight: bold;">影界TV_HP</h6>
+                        <p>魔改：TVBox黑盒</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-3 mt-4">
+              <a href="https://www.123865.com/s/pTqA-pzGsA" target="_blank" 
+               class="btn btn-primary w-100 py-3 mb-3 d-inline-block text-decoration-none">
+                   <i class="bi bi-download"></i> 立即下载
+                </a>
+                <button class="btn btn-outline-secondary"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#changelogModal"
+						style="color: white;">
+                    查看更新日志
+                </button>
+            </div>
+        </div>
+
+        <!-- 右侧截图 -->
+        <div class="col-md-6 desktop-screenshots">
+            <div class="screenshot-container h-100">
+                <div class="screenshot-wrapper" id="desktopScreenshotWrapper">
+                    <div class="screenshot-item">
+                        <img src="https://s1.imagehub.cc/images/2025/03/28/426624690b48834a5dca9c2ddaa5c9d5.jpg" class="img-fluid" alt="截图1">
+                    </div>
+                    <div class="screenshot-item">
+                        <img src="https://s1.imagehub.cc/images/2025/03/28/63134d185cb0d826ec045720b657873c.jpg" class="img-fluid" alt="截图2">
+                    </div>
+                    <div class="screenshot-item">
+                        <img src="https://s1.imagehub.cc/images/2025/03/28/426624690b48834a5dca9c2ddaa5c9d5.jpg" class="img-fluid" alt="截图1">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" onclick="prevSlide(true)">‹</button>
+                <button class="carousel-control-next" onclick="nextSlide(true)">›</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 多个版本介绍  -->
+<div class="modal fade" id="rowModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">版本介绍</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body changelog-list">
+
+                <div class="mb-4">
+                    <h6>影界_手机版</h6>
+                    <ul>
+                        <li>魔改：FongMi影视</li>
+						<li>推荐使用</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-4">
+                    <h6>影界_OK手机版</h6>
+                    <ul>
+                        <li>魔改：OK影视</li>
+						<li>OK影视：基于FongMi影视开发</li>
+                    </ul>
+                </div>
+                <div class="mb-4">
+                    <h6>影界TV_LP_白盒</h6>
+                    <ul>
+                        <li>适用于低性能，低版本电视</li>
+                        <li>兼容性比较强，推荐使用</li>
+                    </ul>
+                </div>
+                <div class="mb-4">
+                    <h6>影界TV_HP_黑盒</h6>
+                    <ul>
+                        <li>适用于高性能，高版本电视</li>
+                        <li>比较美观，可玩性比较多</li>
+                    </ul>
+                </div>	
+                <div class="mb-4">
+                    <h6>横牫说明</h6>
+                    <ul>
+                        <li>手机版包名相同</li>
+                        <li>TV版包名相同</li>
+						<li>相互不可共存</li>
+						<li>选择其中一款下载使用</li>
+                    </ul>
+                </div>				
+            </div>
+        </div>
+    </div>	
+</div>
+<!-- 更新日志弹窗  -->
+<div class="modal fade" id="changelogModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">更新日志</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body changelog-list">
+
+                <div class="mb-4">
+                    <h6>2025-03-28</h6>
+                    <ul>
+                        <li>影界_手机版：更新v3.3.6</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-4">
+                    <h6>2025-03-28</h6>
+                    <ul>
+                        <li>影界_OK手机版：更新v2.8.3</li>
+                    </ul>
+                </div>
+                <div class="mb-4">
+                    <h6>2025-03-26</h6>
+                    <ul>
+                        <li>影界TV_LP_白盒：更新v2025.0326.1801</li>
+                        <li>影界TV_HP_黑盒：更新v2025.0325.0046</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>	
+</div>
+</div>
+        <footer class="text-center text-secondary py-4">
+            <small>© 2025 指尖看世界 | 数据仅供参考，访问请遵守当地法律</small>
+        </footer>	
+
+<!-- 引入Bootstrap JS  -->
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // 轮播控制 
+    let currentSlide = 0;
+    const totalSlides = 3;
+
+    function updateSlide(position, isDesktop = false) {
+        const wrapper = isDesktop ? 
+            document.getElementById('desktopScreenshotWrapper') :
+            document.getElementById('screenshotWrapper');
+        
+        currentSlide = (position + totalSlides) % totalSlides;
+        wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    function prevSlide(isDesktop = false) {
+        updateSlide(currentSlide - 1, isDesktop);
+    }
+
+    function nextSlide(isDesktop = false) {
+        updateSlide(currentSlide + 1, isDesktop);
+    }
+
+    // 自动轮播
+    setInterval(() => {
+        nextSlide();
+        nextSlide(true);
+    }, 5000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,536 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聚合页 | 指尖看世界</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background: #f8f9fa;
+            --text-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .title-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .main-title {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .sub-title {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .url-copy {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 1.5rem auto;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .url-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .link-list {
+            display: grid;
+            grid-gap: 1rem;
+        }
+
+        .link-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .link-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .link-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .link-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .link-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .link-description {
+            color: #666;
+            font-size: 0.9rem;
+            max-width: 300px;
+            text-align: right;
+        }
+
+        /* 弹窗样式 */
+        .toast {
+            position: fixed;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2ecc71;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+            width: auto;
+            max-width: 90%;
+        }
+
+        .url-toast {
+            background: #e74c3c;
+        }
+
+        .toast.active {
+            bottom: 30px;
+            opacity: 1;
+        }
+
+        .toast::before {
+            content: "✓";
+            font-size: 1.2em;
+        }
+
+        /* 新增二维码相关样式 */
+        .qr-button {
+            margin: 2rem auto;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, var(--secondary-color), #2ecc71);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .qr-button:hover::before {
+            left: 100%;
+        }
+
+        .qr-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            50% {
+                box-shadow: 0 8px 15px rgba(52, 152, 219, 0.3);
+            }
+            100% {
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        .qr-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .qr-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .qr-popup.active {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%);
+        }
+
+        .qr-popup img {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 1rem;
+        }
+
+        .beian {
+            margin-top: 2rem;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .beian a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .beian a:hover {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .link-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .link-description {
+                text-align: left;
+                width: 100%;
+            }
+
+            .main-title {
+                font-size: 1.8rem;
+            }
+
+            .sub-title {
+                font-size: 1rem;
+            }
+
+            .toast {
+                width: 90%;
+                text-align: center;
+            }
+        }
+
+        /* 添加全局点击波纹效果样式 */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .ripple::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform .5s, opacity 1s;
+        }
+
+        .ripple:active::after {
+            transform: scale(0, 0);
+            opacity: .3;
+            transition: 0s;
+        }
+
+        /* 修改按钮和链接的鼠标样式 */
+        .url-copy,
+        .link-item,
+        .qr-button,
+        .beian a {
+            cursor: pointer;
+        }
+
+        /* 添加点击缩放效果 */
+        .url-copy:active,
+        .link-item:active,
+        .qr-button:active {
+            transform: scale(0.95);
+            transition: transform 0.1s;
+        }
+    </style>
+    <script>
+        // 检查是否需要强制刷新
+        (function() {
+            // 获取当前时间戳
+            const timestamp = new Date().getTime();
+            const lastRefresh = localStorage.getItem('lastRefresh');
+            
+            // 如果从未刷新过或者距离上次刷新超过1小时
+            if (!lastRefresh || (timestamp - lastRefresh > 3600000)) {
+                localStorage.setItem('lastRefresh', timestamp);
+                // 清除所有缓存的资源
+                caches.keys().then(function(names) {
+                    for (let name of names) caches.delete(name);
+                });
+                // 强制刷新页面
+                window.location.reload(true);
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="../assets/images/favicon.png" alt="网站Logo">
+            </div>
+            <div class="title-group">
+                <h1 class="main-title">指尖网址聚合页</h1>
+                <div class="sub-title">访问前请清除所有浏览器缓存！在这里你可以使用指尖的最新网址！</div>
+            </div>
+            <button class="url-copy ripple" id="copyUrlBtn">
+                <span>🌐</span>
+                <span id="currentUrl">link3.cc/zhijiantv</span>
+            </button>
+        </div>
+
+        <div class="link-list">
+            <div class="link-item ripple" data-url="https://link3.cc/zhijiantv" data-description="访问指尖发布页">
+                <div class="link-content">
+                    <div class="link-icon">
+                        <img src="../assets/images/favicon.png" alt="指尖发布页图标">
+                    </div>
+                    <div>指尖发布页</div>
+                </div>
+                <div class="link-description">link3.cc/zhijiantv | 指尖主用网址</div>
+            </div>
+
+            <div class="link-item ripple" data-url="http://zhijiantv.ysepan.com/" data-description="访问指尖网盘">
+                <div class="link-content">
+                    <div class="link-icon">
+                        <img src="../assets/images/logos/epan.png" alt="指尖网盘图标">
+                    </div>
+                    <div>指尖网盘</div>
+                </div>
+                <div class="link-description">zhijiantv.ysepan.com | 指尖网盘</div>
+            </div>
+        
+
+
+            <div class="link-item ripple" data-url="https://zhijiantv.netlify.app/" data-description="访问指尖_网址导航">
+                <div class="link-content">
+                    <div class="link-icon">
+                        <img src="../assets/images/favicon.png" alt="指尖_网址导航图标">
+                    </div>
+                    <div>指尖_网址导航</div>
+                </div>
+                <div class="link-description">主用 | 指尖_网址导航</div>
+            </div>
+
+            <div class="link-item ripple" data-url="https://zhijiantv.github.io/" data-description="访问指尖_网址导航">
+                <div class="link-content">
+                    <div class="link-icon">
+                        <img src="../assets/images/favicon.png" alt="指尖_网址导航图标">
+                    </div>
+                    <div>指尖_网址导航</div>
+                </div>
+                <div class="link-description">备用 | 指尖_网址导航</div>
+            </div>
+
+
+        </div>    
+        <!-- 新增二维码按钮和弹窗 -->
+        <button class="qr-button ripple" id="qrButton">
+            <span>📱</span>
+            <span>关注公众号</span>
+        </button>
+
+        <div class="qr-popup" id="qrPopup">
+            <img src="../assets/images/logos/weixin.png" alt="公众号二维码">
+            <div>扫码关注公众号</div>
+        </div>
+
+        <!-- 新增备案信息 -->
+        <div class="beian">
+        <p>© 2025 <a href="https://zhijiantv.netlify.app/">指尖看世界</a> 低调使用</p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">您已复制本页面网址，建议存为书签，以防丢失！</div>
+    <div class="toast url-toast" id="urlToast"></div>
+
+    <script>
+        // 修改显示固定网址
+        const currentUrl = 'link3.cc/zhijiantv';
+        document.getElementById('currentUrl').textContent = currentUrl;
+
+        // 复制按钮功能也需要相应修改
+        document.getElementById('copyUrlBtn').addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(currentUrl);  // 使用固定的 URL
+                showToast();
+            } catch (err) {
+                console.error('复制失败:', err);
+            }
+        });
+
+        // 显示弹窗（保持不变）
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // 修改二维码按钮逻辑
+        const qrButton = document.getElementById('qrButton');
+        const qrPopup = document.getElementById('qrPopup');
+
+        qrButton.addEventListener('click', () => {
+            qrPopup.classList.add('active');
+        });
+
+        // 点击弹窗外部关闭弹窗
+        document.addEventListener('click', (e) => {
+            if (!qrPopup.contains(e.target) && !qrButton.contains(e.target)) {
+                qrPopup.classList.remove('active');
+            }
+        });
+
+        // 修改链接点击功能
+        document.querySelectorAll('.link-item').forEach(item => {
+            item.addEventListener('click', async (e) => {
+                const realUrl = item.dataset.url;
+                try {
+                    await navigator.clipboard.writeText(realUrl);
+                    // 显示新的提示信息
+                    const urlToast = document.getElementById('urlToast');
+                    urlToast.textContent = `您已复制"${realUrl}"，不要在QQ微信中打开，请到其他浏览器中粘贴后打开，谢谢！`;
+                    urlToast.classList.add('active');
+                    
+                    // 3秒后跳转
+                    setTimeout(() => {
+                        urlToast.classList.remove('active');
+                        window.open(realUrl, '_blank');
+                    }, 3000);
+                } catch (err) {
+                    console.error('复制失败:', err);
+                    window.open(realUrl, '_blank');
+                }
+            });
+        });
+    </script>
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+    <script>LA.init({id:"K2873faWNCL0kodm",ck:"K2873faWNCL0kodm"})</script>
+</body>
+</html>
